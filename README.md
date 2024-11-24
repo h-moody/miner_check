@@ -22,8 +22,8 @@ pip install requests
 ## Installation
 1. **Clone the Repository**
    ```sh
-   git clone <repository_url>
-   cd <repository_folder>
+   git clone https://github.com/h-moody/miner_check.git
+   cd miner_check
    ```
 
 2. **Set Up Virtual Environment**
