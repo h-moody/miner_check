@@ -1,0 +1,23 @@
+{
+  "username": "root",
+  "password": "root_password",
+  "telegram_token": "YOUR_TELEGRAM_BOT_TOKEN",
+  "chat_id": "YOUR_CHAT_ID",
+  "e9_ips": [
+    "172.16.253.201",
+    "172.16.253.202"
+  ],
+  "l7_ips": [
+    "172.16.253.101",
+    "172.16.253.102"
+  ],
+  "wallet_e9": "YOUR_E9_WALLET_ADDRESS",
+  "wallet_l7": "YOUR_L7_WALLET_ADDRESS",
+  "wallet_prefix_l7": "YOUR_L7_WALLET_PREFIX",
+  "max_temp_e9": 84,
+  "max_temp_l7": 80,
+  "min_hashrate_5s_e9": 100,
+  "min_hashrate_30m_e9": 3300,
+  "min_hashrate_5s_l7": 100,
+  "min_hashrate_30m_l7": 8000
+}

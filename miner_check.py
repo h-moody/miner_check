@@ -5,13 +5,16 @@ import subprocess
 import logging
 from datetime import timedelta
 import argparse
+import json
+import os
 
 # Command-line arguments setup
 parser = argparse.ArgumentParser(description="Antminer Monitoring Script")
-parser.add_argument('--username', type=str, required=True, help='Username for miner authentication')
-parser.add_argument('--password', type=str, required=True, help='Password for miner authentication')
-parser.add_argument('--telegram_token', type=str, required=True, help='Telegram bot token')
-parser.add_argument('--chat_id', type=str, required=True, help='Telegram chat ID')
+parser.add_argument('--config', type=str, help='Path to configuration file')
+parser.add_argument('--username', type=str, help='Username for miner authentication')
+parser.add_argument('--password', type=str, help='Password for miner authentication')
+parser.add_argument('--telegram_token', type=str, help='Telegram bot token')
+parser.add_argument('--chat_id', type=str, help='Telegram chat ID')
 parser.add_argument('--e9_ips', type=str, nargs='*', help='List of E9 Pro miner IP addresses')
 parser.add_argument('--l7_ips', type=str, nargs='*', help='List of L7 miner IP addresses')
 parser.add_argument('--wallet_e9', type=str, help='Wallet address for E9 Pro miners')
@@ -24,6 +27,18 @@ parser.add_argument('--min_hashrate_30m_e9', type=int, default=3300, help='Minim
 parser.add_argument('--min_hashrate_5s_l7', type=int, default=100, help='Minimum 5-second hashrate for L7 miners')
 parser.add_argument('--min_hashrate_30m_l7', type=int, default=8000, help='Minimum 30-minute hashrate for L7 miners')
 args = parser.parse_args()
+
+# Load configuration from file if provided
+if args.config:
+    if os.path.exists(args.config):
+        with open(args.config, 'r') as config_file:
+            config_data = json.load(config_file)
+            # Update args with values from config file if not provided via command line
+            for key, value in config_data.items():
+                if not getattr(args, key):
+                    setattr(args, key, value)
+    else:
+        raise FileNotFoundError(f"Configuration file {args.config} not found.")
 
 # Logging setup
 log_filename = "miner_logs.log"
@@ -176,7 +191,7 @@ for miner_type, miner_data in miners.items():
                 ip = extract_ip(url)
                 expected_wallet_address = f"{miner_data['wallet_prefix']}.{ip.split('.')[-1]}"
             else:
-                raise ValueError("Either --wallet_l7 or --wallet_prefix_l7 must be provided for L7 miners.")
+                raise ValueError("Either wallet_l7 or wallet_prefix_l7 must be provided for L7 miners.")
         else:
             expected_wallet_address = miner_data["wallet"]
         logging.info(f"Checking {miner_type} at {url}")
